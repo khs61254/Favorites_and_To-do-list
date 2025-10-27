@@ -128,7 +128,7 @@ const TodoList = () => {
         {todos.map((todo) => (
           <li
             key={todo.id}
-            className={`flex items-center p-4 rounded-lg bg-white/5`}
+            className="list-item flex items-center"
           >
             {editingId === todo.id ? (
               <div className="flex-grow flex items-center">
@@ -160,7 +160,7 @@ const TodoList = () => {
                   <div className="relative group"
                     onDoubleClick={() => startDetailsEditing(todo.id, todo.details)}>
                     <span
-                      className={`text-lg ${todo.completed ? 'line-through text-white/50' : ''}`}>{todo.text}</span>
+                      className={`text-lg ${todo.completed ? 'line-through' : ''}`}>{todo.text}</span>
                     {todo.details && (
                       <div className="details-tooltip">
                         <p className="text-sm">{todo.details}</p>

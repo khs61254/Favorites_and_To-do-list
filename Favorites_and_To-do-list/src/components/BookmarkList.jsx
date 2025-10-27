@@ -108,7 +108,7 @@ const BookmarkList = ({ handleBookmarkClick }) => {
             <h3 className="text-xl font-bold mb-2">{category}</h3>
             <ul>
               {groupedBookmarks[category].map((bookmark) => (
-                <li key={bookmark.id} className="flex justify-between items-center p-3 border-b border-white/10">
+                <li key={bookmark.id} className="list-item flex justify-between items-center">
                   <div className="flex-grow">
                     <a
                       href={bookmark.url}
@@ -119,7 +119,7 @@ const BookmarkList = ({ handleBookmarkClick }) => {
                     >
                       {bookmark.name}
                     </a>
-                    <p className="text-sm text-white/70">{bookmark.subtitle}</p>
+                    <p className="text-sm">{bookmark.subtitle}</p>
                   </div>
                   <div className="flex items-center">
                     <button
