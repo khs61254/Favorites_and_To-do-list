@@ -174,7 +174,7 @@ const TodoList = () => {
                       e.stopPropagation();
                       toggleImportant(todo.id);
                     }}
-                    className="p-1 rounded-full transition-colors"
+                    className="icon-btn"
                   >
                     {todo.isImportant ? <StarIcon className="star-icon important" /> : <EmptyStarIcon className="star-icon not-important" />}
                   </button>
