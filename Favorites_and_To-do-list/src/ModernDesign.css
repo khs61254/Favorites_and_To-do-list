@@ -1,0 +1,100 @@
+:root {
+  --background-color: #0C70F2;
+  --card-background-color: rgba(255, 255, 255, 0.05);
+  --text-color: #FFFFFF;
+  --primary-accent-color: #FFD700;
+  --secondary-accent-color: #FF6B6B;
+  --input-bg-color: rgba(0, 0, 0, 0.2);
+  --input-border-color: rgba(255, 255, 255, 0.2);
+  --input-focus-border-color: var(--primary-accent-color);
+  --button-border-color: var(--text-color);
+  --button-hover-bg-color: rgba(255, 255, 255, 0.1);
+  --primary-button-bg-color: var(--primary-accent-color);
+  --primary-button-text-color: #000000;
+}
+
+body {
+  background-color: var(--background-color);
+  color: var(--text-color);
+  font-family: 'Poppins', sans-serif;
+}
+
+.app-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem;
+}
+
+.card {
+  background-color: var(--card-background-color);
+  border-radius: 1rem;
+  padding: 2rem;
+  width: 100%;
+  max-width: 800px;
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+}
+
+.input-field {
+  background-color: var(--input-bg-color);
+  border: 1px solid var(--input-border-color);
+  border-radius: 0.5rem;
+  padding: 0.75rem 1rem;
+  color: var(--text-color);
+  transition: border-color 0.2s ease-in-out;
+}
+
+.input-field:focus {
+  outline: none;
+  border-color: var(--input-focus-border-color);
+}
+
+.btn {
+  background-color: transparent;
+  border: 2px solid var(--button-border-color);
+  color: var(--text-color);
+  border-radius: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  font-weight: 600;
+  transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+  cursor: pointer;
+}
+
+.btn:hover {
+  background-color: var(--button-hover-bg-color);
+}
+
+.btn-primary {
+  background-color: var(--primary-button-bg-color);
+  color: var(--primary-button-text-color);
+  border-color: var(--primary-button-bg-color);
+}
+
+.btn-danger {
+  background-color: var(--secondary-accent-color);
+  color: var(--text-color);
+  border-color: var(--secondary-accent-color);
+}
+
+.tabs-container {
+  display: flex;
+  background-color: var(--input-bg-color);
+  border-radius: 0.5rem;
+  padding: 0.5rem;
+}
+
+.tab {
+  flex: 1;
+  text-align: center;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  color: var(--text-color);
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.tab.active {
+  background-color: var(--primary-accent-color);
+  color: var(--primary-button-text-color);
+}

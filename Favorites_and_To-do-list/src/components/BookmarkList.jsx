@@ -55,14 +55,14 @@ const BookmarkList = ({ handleBookmarkClick }) => {
             type="text"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className="flex-grow p-2 border rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
+            className="input-field flex-grow"
             placeholder="이름"
           />
           <input
             type="text"
             value={url}
             onChange={(e) => setUrl(e.target.value)}
-            className="flex-grow p-2 border rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
+            className="input-field flex-grow"
             placeholder="URL"
           />
         </div>
@@ -71,7 +71,7 @@ const BookmarkList = ({ handleBookmarkClick }) => {
             type="text"
             value={subtitle}
             onChange={(e) => setSubtitle(e.target.value)}
-            className="flex-grow p-2 border rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
+            className="input-field flex-grow"
             placeholder="요약"
           />
         </div>
@@ -79,7 +79,7 @@ const BookmarkList = ({ handleBookmarkClick }) => {
           <select
             value={selectedCategory}
             onChange={(e) => setSelectedCategory(e.target.value)}
-            className="flex-grow p-2 border rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
+            className="input-field flex-grow"
           >
             {categories.map((cat) => (
               <option key={cat} value={cat}>
@@ -91,52 +91,46 @@ const BookmarkList = ({ handleBookmarkClick }) => {
             type="text"
             value={newCategory}
             onChange={(e) => setNewCategory(e.target.value)}
-            className="flex-grow p-2 border rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
+            className="input-field flex-grow"
             placeholder="새 카테고리"
           />
-          <button
-            onClick={addCategory}
-            className="bg-green-500 text-white px-4 py-2 rounded-md shadow-sm hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
-          >
+          <button onClick={addCategory} className="btn">
             카테고리 추가
           </button>
         </div>
-        <button
-          onClick={addBookmark}
-          className="w-full bg-blue-500 text-white px-4 py-2 rounded-md shadow-sm hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-        >
+        <button onClick={addBookmark} className="btn btn-primary w-full">
           추가
         </button>
       </div>
       <div>
         {Object.keys(groupedBookmarks).map((category) => (
           <div key={category} className="mb-6">
-            <h3 className="text-xl font-bold mb-2 text-gray-700">{category}</h3>
+            <h3 className="text-xl font-bold mb-2">{category}</h3>
             <ul>
               {groupedBookmarks[category].map((bookmark) => (
-                <li key={bookmark.id} className="flex justify-between items-center p-3 border-b">
+                <li key={bookmark.id} className="flex justify-between items-center p-3 border-b border-white/10">
                   <div className="flex-grow">
                     <a
                       href={bookmark.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-blue-600 hover:underline"
+                      className="hover:underline"
                       onClick={() => handleBookmarkClick(bookmark)}
                     >
                       {bookmark.name}
                     </a>
-                    <p className="text-sm text-gray-500">{bookmark.subtitle}</p>
+                    <p className="text-sm text-white/70">{bookmark.subtitle}</p>
                   </div>
                   <div className="flex items-center">
                     <button
                       onClick={() => setEditingBookmark(bookmark)}
-                      className="text-blue-500 hover:text-blue-700 font-semibold mr-4"
+                      className="btn"
                     >
                       수정
                     </button>
                     <button
                       onClick={() => deleteBookmark(bookmark.id)}
-                      className="text-red-500 hover:text-red-700 font-semibold ml-4"
+                      className="btn btn-danger ml-2"
                     >
                       삭제
                     </button>
@@ -148,31 +142,31 @@ const BookmarkList = ({ handleBookmarkClick }) => {
         ))}
       </div>
       {editingBookmark && (
-        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center">
-          <div className="bg-white p-8 rounded-lg shadow-xl">
+        <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">
+          <div className="card p-8">
             <h2 className="text-2xl font-bold mb-4">즐겨찾기 수정</h2>
             <input
               type="text"
               value={editingBookmark.name}
               onChange={(e) => setEditingBookmark({ ...editingBookmark, name: e.target.value })}
-              className="w-full p-2 border rounded-md mb-4"
+              className="input-field w-full mb-4"
             />
             <input
               type="text"
               value={editingBookmark.url}
               onChange={(e) => setEditingBookmark({ ...editingBookmark, url: e.target.value })}
-              className="w-full p-2 border rounded-md mb-4"
+              className="input-field w-full mb-4"
             />
             <input
               type="text"
               value={editingBookmark.subtitle || ''}
               onChange={(e) => setEditingBookmark({ ...editingBookmark, subtitle: e.target.value })}
-              className="w-full p-2 border rounded-md mb-4"
+              className="input-field w-full mb-4"
               placeholder="요약"
             />
             <div className="flex justify-end">
-              <button onClick={() => setEditingBookmark(null)} className="bg-gray-300 text-black px-4 py-2 rounded-md mr-2">취소</button>
-              <button onClick={updateBookmark} className="bg-blue-500 text-white px-4 py-2 rounded-md">저장</button>
+              <button onClick={() => setEditingBookmark(null)} className="btn mr-2">취소</button>
+              <button onClick={updateBookmark} className="btn btn-primary">저장</button>
             </div>
           </div>
         </div>

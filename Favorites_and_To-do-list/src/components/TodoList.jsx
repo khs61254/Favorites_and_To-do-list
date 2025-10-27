@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import StarIcon from '../icons/StarIcon';
+import EmptyStarIcon from '../icons/EmptyStarIcon';
 
 const TodoList = () => {
   const [todos, setTodos] = useState([
@@ -16,7 +18,7 @@ const TodoList = () => {
     if (autoDelete) {
       setTodos(todos.filter(todo => !todo.completed));
     }
-  }, [autoDelete]);
+  }, [autoDelete, todos]);
 
   const addTodo = () => {
     if (newTodo.trim() === '') return;
@@ -25,8 +27,10 @@ const TodoList = () => {
   };
 
   const toggleTodo = (id) => {
-    if (autoDelete) {
-      setTodos(todos.filter(todo => todo.id !== id));
+    if (autoDelete && todos.find(todo => todo.id === id && !todo.completed)) {
+      setTimeout(() => {
+        setTodos(prevTodos => prevTodos.filter(todo => todo.id !== id));
+      }, 500);
     } else {
       setTodos(
         todos.map((todo) =>
@@ -92,44 +96,39 @@ const TodoList = () => {
 
   return (
     <div>
-      <h2 className="text-2xl font-bold mb-4 text-center">할 일 목록</h2>
-      <div className="flex gap-2 mb-4">
+      <h2 className="text-3xl font-bold mb-6 text-center">할 일 목록</h2>
+      <div className="flex gap-2 mb-6">
         <input
           type="text"
           value={newTodo}
           onChange={(e) => setNewTodo(e.target.value)}
-          className="flex-grow p-2 border rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
+          className="input-field flex-grow"
           placeholder="새 할 일을 입력하세요"
         />
-        <button
-          onClick={addTodo}
-          className="bg-blue-500 text-white px-4 py-2 rounded-md shadow-sm hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-        >
+        <button onClick={addTodo} className="btn btn-primary">
           추가
         </button>
-        <button
-          onClick={clearTodos}
-          className="bg-red-500 text-white px-4 py-2 rounded-md shadow-sm hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
-        >
+        <button onClick={clearTodos} className="btn btn-danger">
           비우기
         </button>
       </div>
       <div className="flex items-center mb-4">
         <input
           type="checkbox"
+          id="auto-delete"
           checked={autoDelete}
           onChange={() => setAutoDelete(!autoDelete)}
-          className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+          className="h-5 w-5 rounded cursor-pointer"
         />
-        <label htmlFor="auto-delete" className="ml-2 block text-sm text-gray-900">
+        <label htmlFor="auto-delete" className="ml-3 block text-md cursor-pointer">
           완료 항목 자동 삭제
         </label>
       </div>
-      <ul>
+      <ul className="space-y-3">
         {todos.map((todo) => (
           <li
             key={todo.id}
-            className={`flex justify-between items-center p-3 border-b`}
+            className={`flex items-center p-4 rounded-lg bg-white/5`}
           >
             {editingId === todo.id ? (
               <div className="flex-grow flex items-center">
@@ -137,73 +136,57 @@ const TodoList = () => {
                   type="text"
                   value={editingText}
                   onChange={(e) => setEditingText(e.target.value)}
-                  className="flex-grow p-2 border rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                  className="input-field flex-grow"
                 />
-                <button
-                  onClick={() => saveTodo(todo.id)}
-                  className="ml-2 bg-green-500 text-white px-4 py-2 rounded-md shadow-sm hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
-                >
+                <button onClick={() => saveTodo(todo.id)} className="btn btn-primary ml-2">
                   저장
                 </button>
-                <button
-                  onClick={cancelEditing}
-                  className="ml-2 bg-gray-500 text-white px-4 py-2 rounded-md shadow-sm hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
-                >
+                <button onClick={cancelEditing} className="btn ml-2">
                   취소
                 </button>
               </div>
             ) : (
               <>
-                <div // Outer container for checkbox and text
+                <div
                   className={`flex-grow cursor-pointer flex items-center`}
                   onClick={() => toggleTodo(todo.id)}
                 >
                   <input
                     type="checkbox"
                     checked={todo.completed}
-                    readOnly // Prevent double-toggling from label click
-                    className="mr-3 form-checkbox h-5 w-5 text-blue-600 rounded focus:ring-blue-500"
+                    readOnly
+                    className="mr-4 h-6 w-6 rounded cursor-pointer"
                   />
-                  <div className="relative group">
+                  <div className="relative group"
+                    onDoubleClick={() => startDetailsEditing(todo.id, todo.details)}>
                     <span
-                      style={{ fontWeight: todo.isImportant ? 'bold' : 'normal' }}
-                      className={`${todo.completed ? 'line-through text-gray-400' : ''}`}>{todo.text}</span>
+                      className={`text-lg ${todo.completed ? 'line-through text-white/50' : ''}`}>{todo.text}</span>
                     {todo.details && (
-                      <div className="absolute left-0 top-full mt-2 w-full p-2 bg-gray-100 border rounded-md shadow-lg opacity-0 group-hover:opacity-100 transition-opacity z-50">
-                        <p className="text-sm text-gray-700">{todo.details}</p>
+                      <div className="details-tooltip">
+                        <p className="text-sm">{todo.details}</p>
                       </div>
                     )}
                   </div>
                 </div>
-                <div className="flex items-center">
+                <div className="flex items-center space-x-3">
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
                       toggleImportant(todo.id);
                     }}
-                    className={`mr-4 px-2 py-1 text-sm rounded ${
-                      todo.isImportant
-                        ? 'bg-yellow-400 text-white font-semibold'
-                        : 'bg-gray-200 text-gray-700'
-                    }`}
+                    className="p-1 rounded-full transition-colors"
                   >
-                    강조
+                    {todo.isImportant ? <StarIcon className="star-icon important" /> : <EmptyStarIcon className="star-icon not-important" />}
                   </button>
                   <button
                     onClick={() => startEditing(todo.id, todo.text)}
-                    className="mr-2 text-blue-500 hover:text-blue-700 font-semibold"
+                    className="btn"
                   >
                     수정
                   </button>
                   <button
-                    onClick={() => startDetailsEditing(todo.id, todo.details)}
-                    className="mr-2 text-gray-500 hover:text-gray-700 font-semibold"
-                  >
-                    상세 수정
-                  </button>
-                  <button
                     onClick={() => deleteTodo(todo.id)}
-                    className="text-red-500 hover:text-red-700 font-semibold"
+                    className="btn btn-danger"
                   >
                     삭제
                   </button>
@@ -214,25 +197,25 @@ const TodoList = () => {
         ))}
       </ul>
       {detailsEditingId !== null && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white p-6 rounded-md shadow-lg w-1/3">
+        <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">
+          <div className="card p-6">
             <h3 className="text-lg font-bold mb-4">상세 정보 수정</h3>
             <textarea
               value={detailsEditingText}
               onChange={(e) => setDetailsEditingText(e.target.value)}
-              className="w-full p-2 border rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
+              className="input-field w-full"
               rows="4"
             />
             <div className="flex justify-end gap-2 mt-4">
               <button
                 onClick={() => saveDetails(detailsEditingId)}
-                className="bg-green-500 text-white px-4 py-2 rounded-md shadow-sm hover:bg-green-600"
+                className="btn btn-primary"
               >
                 저장
               </button>
               <button
                 onClick={cancelDetailsEditing}
-                className="bg-gray-500 text-white px-4 py-2 rounded-md shadow-sm hover:bg-gray-600"
+                className="btn"
               >
                 취소
               </button>
@@ -245,4 +228,3 @@ const TodoList = () => {
 };
 
 export default TodoList;
-
