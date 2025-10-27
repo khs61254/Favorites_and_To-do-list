@@ -26,11 +26,12 @@ function App() {
         <Tabs activeTab={activeTab} setActiveTab={setActiveTab} />
         {activeTab === 'bookmarks' && <RecentlyVisited recentlyVisited={recentlyVisited} />}
         <div className="mt-4">
-          {activeTab === 'todos' ? (
+          <div className={activeTab === 'todos' ? '' : 'hidden'}>
             <TodoList />
-          ) : (
+          </div>
+          <div className={activeTab === 'bookmarks' ? '' : 'hidden'}>
             <BookmarkList handleBookmarkClick={handleBookmarkClick} />
-          )}
+          </div>
         </div>
       </div>
     </div>
