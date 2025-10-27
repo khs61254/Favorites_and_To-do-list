@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 const TodoList = () => {
   const [todos, setTodos] = useState([
@@ -9,6 +9,12 @@ const TodoList = () => {
   const [editingId, setEditingId] = useState(null);
   const [editingText, setEditingText] = useState('');
   const [autoDelete, setAutoDelete] = useState(false);
+
+  useEffect(() => {
+    if (autoDelete) {
+      setTodos(todos.filter(todo => !todo.completed));
+    }
+  }, [autoDelete]);
 
   const addTodo = () => {
     if (newTodo.trim() === '') return;
