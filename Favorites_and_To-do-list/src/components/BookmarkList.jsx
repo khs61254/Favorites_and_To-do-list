@@ -2,12 +2,13 @@ import React, { useState } from 'react';
 
 const BookmarkList = ({ handleBookmarkClick }) => {
   const [bookmarks, setBookmarks] = useState([
-    { id: 1, name: 'Google', url: 'https://google.com', category: '검색엔진' },
-    { id: 2, name: 'Naver', url: 'https://naver.com', category: '검색엔진' },
-    { id: 3, name: 'YouTube', url: 'https://youtube.com', category: '동영상' },
+    { id: 1, name: 'Google', url: 'https://google.com', category: '검색엔진', subtitle: '검색 엔진' },
+    { id: 2, name: 'Naver', url: 'https://naver.com', category: '검색엔진', subtitle: '검색 엔진' },
+    { id: 3, name: 'YouTube', url: 'https://youtube.com', category: '동영상', subtitle: '동영상 서비스' },
   ]);
   const [name, setName] = useState('');
   const [url, setUrl] = useState('');
+  const [subtitle, setSubtitle] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('검색엔진');
   const [categories, setCategories] = useState(['검색엔진', '동영상']);
   const [newCategory, setNewCategory] = useState('');
@@ -15,9 +16,10 @@ const BookmarkList = ({ handleBookmarkClick }) => {
 
   const addBookmark = () => {
     if (name.trim() === '' || url.trim() === '') return;
-    setBookmarks([...bookmarks, { id: Date.now(), name, url, category: selectedCategory }]);
+    setBookmarks([...bookmarks, { id: Date.now(), name, url, category: selectedCategory, subtitle }]);
     setName('');
     setUrl('');
+    setSubtitle('');
   };
 
   const deleteBookmark = (id) => {
@@ -65,6 +67,15 @@ const BookmarkList = ({ handleBookmarkClick }) => {
           />
         </div>
         <div className="flex gap-2">
+          <input
+            type="text"
+            value={subtitle}
+            onChange={(e) => setSubtitle(e.target.value)}
+            className="flex-grow p-2 border rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
+            placeholder="요약"
+          />
+        </div>
+        <div className="flex gap-2">
           <select
             value={selectedCategory}
             onChange={(e) => setSelectedCategory(e.target.value)}
@@ -104,15 +115,18 @@ const BookmarkList = ({ handleBookmarkClick }) => {
             <ul>
               {groupedBookmarks[category].map((bookmark) => (
                 <li key={bookmark.id} className="flex justify-between items-center p-3 border-b">
-                  <a
-                    href={bookmark.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-blue-600 hover:underline flex-grow"
-                    onClick={() => handleBookmarkClick(bookmark)}
-                  >
-                    {bookmark.name}
-                  </a>
+                  <div className="flex-grow">
+                    <a
+                      href={bookmark.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-600 hover:underline"
+                      onClick={() => handleBookmarkClick(bookmark)}
+                    >
+                      {bookmark.name}
+                    </a>
+                    <p className="text-sm text-gray-500">{bookmark.subtitle}</p>
+                  </div>
                   <div className="flex items-center">
                     <button
                       onClick={() => setEditingBookmark(bookmark)}
@@ -148,6 +162,13 @@ const BookmarkList = ({ handleBookmarkClick }) => {
               value={editingBookmark.url}
               onChange={(e) => setEditingBookmark({ ...editingBookmark, url: e.target.value })}
               className="w-full p-2 border rounded-md mb-4"
+            />
+            <input
+              type="text"
+              value={editingBookmark.subtitle || ''}
+              onChange={(e) => setEditingBookmark({ ...editingBookmark, subtitle: e.target.value })}
+              className="w-full p-2 border rounded-md mb-4"
+              placeholder="요약"
             />
             <div className="flex justify-end">
               <button onClick={() => setEditingBookmark(null)} className="bg-gray-300 text-black px-4 py-2 rounded-md mr-2">취소</button>
