@@ -8,6 +8,7 @@ const TodoList = () => {
   const [newTodo, setNewTodo] = useState('');
   const [editingId, setEditingId] = useState(null);
   const [editingText, setEditingText] = useState('');
+  const [autoDelete, setAutoDelete] = useState(false);
 
   const addTodo = () => {
     if (newTodo.trim() === '') return;
@@ -16,11 +17,15 @@ const TodoList = () => {
   };
 
   const toggleTodo = (id) => {
-    setTodos(
-      todos.map((todo) =>
-        todo.id === id ? { ...todo, completed: !todo.completed } : todo
-      )
-    );
+    if (autoDelete) {
+      setTodos(todos.filter(todo => todo.id !== id));
+    } else {
+      setTodos(
+        todos.map((todo) =>
+          todo.id === id ? { ...todo, completed: !todo.completed } : todo
+        )
+      );
+    }
   };
 
   const toggleImportant = (id) => {
@@ -81,6 +86,17 @@ const TodoList = () => {
         >
           비우기
         </button>
+      </div>
+      <div className="flex items-center mb-4">
+        <input
+          type="checkbox"
+          checked={autoDelete}
+          onChange={() => setAutoDelete(!autoDelete)}
+          className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+        />
+        <label htmlFor="auto-delete" className="ml-2 block text-sm text-gray-900">
+          완료 항목 자동 삭제
+        </label>
       </div>
       <ul>
         {todos.map((todo) => (
