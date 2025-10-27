@@ -4,8 +4,8 @@ import EmptyStarIcon from '../icons/EmptyStarIcon';
 
 const TodoList = () => {
   const [todos, setTodos] = useState([
-    { id: 1, text: 'React 공부하기', completed: false, isImportant: false, details: 'React의 기본 개념과 훅에 대해 학습합니다.' },
-    { id: 2, text: 'Tailwind CSS 연습하기', completed: true, isImportant: true, details: 'Tailwind CSS를 사용하여 반응형 웹 디자인을 연습합니다.' },
+    { id: 1, text: 'React 공부하기', completed: false, isImportant: false, details: 'React의 기본 개념과 훅에 대해 학습합니다.', importantTimestamp: null },
+    { id: 2, text: 'Tailwind CSS 연습하기', completed: true, isImportant: true, details: 'Tailwind CSS를 사용하여 반응형 웹 디자인을 연습합니다.', importantTimestamp: 1 },
   ]);
   const [newTodo, setNewTodo] = useState('');
   const [editingId, setEditingId] = useState(null);
@@ -43,7 +43,13 @@ const TodoList = () => {
   const toggleImportant = (id) => {
     setTodos(
       todos.map((todo) =>
-        todo.id === id ? { ...todo, isImportant: !todo.isImportant } : todo
+        todo.id === id
+          ? {
+              ...todo,
+              isImportant: !todo.isImportant,
+              importantTimestamp: !todo.isImportant ? Date.now() : null,
+            }
+          : todo
       )
     );
   };
@@ -94,6 +100,15 @@ const TodoList = () => {
     cancelDetailsEditing();
   };
 
+  const sortedTodos = [...todos].sort((a, b) => {
+    if (a.isImportant && !b.isImportant) return -1;
+    if (!a.isImportant && b.isImportant) return 1;
+    if (a.isImportant && b.isImportant) {
+      return a.importantTimestamp - b.importantTimestamp;
+    }
+    return 0;
+  });
+
   return (
     <div>
       <h2 className="text-3xl font-bold mb-6 text-center">할 일 목록</h2>
@@ -125,7 +140,7 @@ const TodoList = () => {
         </label>
       </div>
       <ul className="space-y-3">
-        {todos.map((todo) => (
+        {sortedTodos.map((todo) => (
           <li
             key={todo.id}
             className="list-item flex items-center"
