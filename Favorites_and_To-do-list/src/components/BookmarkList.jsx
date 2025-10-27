@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const BookmarkList = () => {
+const BookmarkList = ({ handleBookmarkClick }) => {
   const [bookmarks, setBookmarks] = useState([
     { id: 1, name: 'Google', url: 'https://google.com', category: '검색엔진' },
     { id: 2, name: 'Naver', url: 'https://naver.com', category: '검색엔진' },
@@ -11,6 +11,7 @@ const BookmarkList = () => {
   const [selectedCategory, setSelectedCategory] = useState('검색엔진');
   const [categories, setCategories] = useState(['검색엔진', '동영상']);
   const [newCategory, setNewCategory] = useState('');
+  const [editingBookmark, setEditingBookmark] = useState(null);
 
   const addBookmark = () => {
     if (name.trim() === '' || url.trim() === '') return;
@@ -21,6 +22,12 @@ const BookmarkList = () => {
 
   const deleteBookmark = (id) => {
     setBookmarks(bookmarks.filter((bookmark) => bookmark.id !== id));
+  };
+
+  const updateBookmark = () => {
+    if (!editingBookmark || editingBookmark.name.trim() === '' || editingBookmark.url.trim() === '') return;
+    setBookmarks(bookmarks.map((b) => (b.id === editingBookmark.id ? editingBookmark : b)));
+    setEditingBookmark(null);
   };
 
   const addCategory = () => {
@@ -102,21 +109,53 @@ const BookmarkList = () => {
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-blue-600 hover:underline flex-grow"
+                    onClick={() => handleBookmarkClick(bookmark)}
                   >
                     {bookmark.name}
                   </a>
-                  <button
-                    onClick={() => deleteBookmark(bookmark.id)}
-                    className="text-red-500 hover:text-red-700 font-semibold ml-4"
-                  >
-                    삭제
-                  </button>
+                  <div className="flex items-center">
+                    <button
+                      onClick={() => setEditingBookmark(bookmark)}
+                      className="text-blue-500 hover:text-blue-700 font-semibold mr-4"
+                    >
+                      수정
+                    </button>
+                    <button
+                      onClick={() => deleteBookmark(bookmark.id)}
+                      className="text-red-500 hover:text-red-700 font-semibold ml-4"
+                    >
+                      삭제
+                    </button>
+                  </div>
                 </li>
               ))}
             </ul>
           </div>
         ))}
       </div>
+      {editingBookmark && (
+        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center">
+          <div className="bg-white p-8 rounded-lg shadow-xl">
+            <h2 className="text-2xl font-bold mb-4">즐겨찾기 수정</h2>
+            <input
+              type="text"
+              value={editingBookmark.name}
+              onChange={(e) => setEditingBookmark({ ...editingBookmark, name: e.target.value })}
+              className="w-full p-2 border rounded-md mb-4"
+            />
+            <input
+              type="text"
+              value={editingBookmark.url}
+              onChange={(e) => setEditingBookmark({ ...editingBookmark, url: e.target.value })}
+              className="w-full p-2 border rounded-md mb-4"
+            />
+            <div className="flex justify-end">
+              <button onClick={() => setEditingBookmark(null)} className="bg-gray-300 text-black px-4 py-2 rounded-md mr-2">취소</button>
+              <button onClick={updateBookmark} className="bg-blue-500 text-white px-4 py-2 rounded-md">저장</button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
