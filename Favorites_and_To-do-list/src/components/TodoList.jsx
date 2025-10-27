@@ -129,7 +129,7 @@ const TodoList = () => {
         {todos.map((todo) => (
           <li
             key={todo.id}
-            className={`group relative flex justify-between items-center p-3 border-b`}
+            className={`flex justify-between items-center p-3 border-b`}
           >
             {editingId === todo.id ? (
               <div className="flex-grow flex items-center">
@@ -164,9 +164,16 @@ const TodoList = () => {
                     readOnly // Prevent double-toggling from label click
                     className="mr-3 form-checkbox h-5 w-5 text-blue-600 rounded focus:ring-blue-500"
                   />
-                  <span
-                    style={{ fontWeight: todo.isImportant ? 'bold' : 'normal' }}
-                    className={`${todo.completed ? 'line-through text-gray-400' : ''}`}>{todo.text}</span>
+                  <div className="relative group">
+                    <span
+                      style={{ fontWeight: todo.isImportant ? 'bold' : 'normal' }}
+                      className={`${todo.completed ? 'line-through text-gray-400' : ''}`}>{todo.text}</span>
+                    {todo.details && (
+                      <div className="absolute left-0 top-full mt-2 w-full p-2 bg-gray-100 border rounded-md shadow-lg opacity-0 group-hover:opacity-100 transition-opacity z-50">
+                        <p className="text-sm text-gray-700">{todo.details}</p>
+                      </div>
+                    )}
+                  </div>
                 </div>
                 <div className="flex items-center">
                   <button
@@ -192,7 +199,7 @@ const TodoList = () => {
                     onClick={() => startDetailsEditing(todo.id, todo.details)}
                     className="mr-2 text-gray-500 hover:text-gray-700 font-semibold"
                   >
-                    상세
+                    상세 수정
                   </button>
                   <button
                     onClick={() => deleteTodo(todo.id)}
@@ -201,18 +208,13 @@ const TodoList = () => {
                     삭제
                   </button>
                 </div>
-                {todo.details && (
-                  <div className="absolute left-0 top-full mt-2 w-full p-2 bg-gray-100 border rounded-md shadow-lg opacity-0 group-hover:opacity-100 transition-opacity">
-                    <p className="text-sm text-gray-700">{todo.details}</p>
-                  </div>
-                )}
               </>
             )}
           </li>
         ))}
       </ul>
       {detailsEditingId !== null && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white p-6 rounded-md shadow-lg w-1/3">
             <h3 className="text-lg font-bold mb-4">상세 정보 수정</h3>
             <textarea
