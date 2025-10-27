@@ -35,6 +35,10 @@ const TodoList = () => {
     setTodos(todos.filter((todo) => todo.id !== id));
   };
 
+  const clearTodos = () => {
+    setTodos([]);
+  };
+
   const startEditing = (id, text) => {
     setEditingId(id);
     setEditingText(text);
@@ -70,6 +74,12 @@ const TodoList = () => {
           className="bg-blue-500 text-white px-4 py-2 rounded-md shadow-sm hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
         >
           추가
+        </button>
+        <button
+          onClick={clearTodos}
+          className="bg-red-500 text-white px-4 py-2 rounded-md shadow-sm hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
+        >
+          비우기
         </button>
       </div>
       <ul>
